@@ -1,0 +1,15 @@
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\bin\Debug\Browser-IP-CW01.exe.config
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\bin\Debug\Browser-IP-CW01.exe
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\bin\Debug\Browser-IP-CW01.pdb
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser-IP-CW01.csproj.AssemblyReference.cache
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser-IP-CW01.csproj.SuggestedBindingRedirects.cache
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser_IP_CW01.Browser.resources
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser_IP_CW01.Properties.Resources.resources
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser-IP-CW01.csproj.GenerateResource.cache
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser-IP-CW01.csproj.CoreCompileInputs.cache
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser-IP-CW01.exe
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser-IP-CW01.pdb
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser_IP_CW01.Start.resources
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.dll
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.xml
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser-IP-CW01.csproj.CopyComplete

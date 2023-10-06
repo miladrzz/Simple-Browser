@@ -13,3 +13,5 @@ C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser_IP
 C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.dll
 C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.xml
 C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser-IP-CW01.csproj.CopyComplete
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser_IP_CW01.History.resources
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser_IP_CW01.Favorits.resources

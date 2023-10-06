@@ -19,12 +19,9 @@ namespace Browser_IP_CW01
         {
             //each page has a url.
             public string url;
-            //a boolean to set a page to user's favorits
-            public bool isFavorite;
             public WebPage(string url)
             {
                 this.url = url;
-                isFavorite = false;
             }
         }
         //a container that holds data related to user's history.
@@ -40,62 +37,74 @@ namespace Browser_IP_CW01
             //add a page to history.
             public void insert(WebPage page)
             {
-                int index = findIndex(page);
+                int index = findHistoryIndex(page.url);
+                loadHistory(this);
                 //if page was not in history.
                 if (index == -1)
                 {
                     //if the history was full -> overflow: remove the first page and add the new one to the last.
-                    if (lastIndex == 49)
+                    if (lastIndex == 50)
                     {
-                        for (int i = 0; i <= 48; i++)
+                        string text = File.ReadAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\history.txt");
+                        string[] data = text.Split('\n');
+                        for (int i = 0; i < data.Length - 1; i++)
                         {
-                            pages[i] = pages[i + 1];
+                            data[i] = data[i + 1];
                         }
-                        pages[49] = page;
+                        data[data.Length - 2] =page.url;
+                        File.WriteAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\history.txt", "");
+                        for(int i = 0; i < data.Length - 1; i++)
+                        {
+                            writeHistory(data[i]);
+                        }
                     }
                     //if it was not full -> add the new page to the end of container.
                     else
                     {
                         pages[lastIndex] = page;
                         lastIndex++;
+                        writeHistory(page.url);
                     }
                 }
                 //if the new page was already in the history.
                 else
                 {
                     //shift the page to the end
-                    for (int i = index; i < lastIndex; i++)
+                    string text = File.ReadAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\history.txt");
+                    string[] data = text.Split('\n');
+                    string temp = data[index];
+                    for (int i = index; i < data.Length - 1; i++)
                     {
-                        pages[i] = pages[i + 1];
+                        data[i] = data[i + 1];
                     }
-                    pages[49] = page;
-                }
-            }
-           /* public void writeOnFile(string url)
-            {
-                string data = url + "\n";
-                File.AppendAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01/History.txt", data);
-            } */
-            //find index of a page in history. return -1 if it was not there.
-            public int findIndex(WebPage page)
-            {
-                int result = -1;
-                for (int i = 0; i < pages.Length; i++)
-                {
-                    if (pages[i] == page)
+                    data[data.Length - 2] = temp;
+                    File.WriteAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\history.txt", "");
+                    for (int i = 0; i < data.Length - 1; i++)
                     {
-                        result = i;
+                        writeHistory(data[i]);
                     }
+                    loadHistory(this);
                 }
-                return result;
             }
         }
         public HistoryContainer history = new HistoryContainer();
         public async Task<string> callUrl(string url)
         {
-            HttpClient client = new HttpClient();
-            string response = await client.GetStringAsync(url);
-            return response;
+            try
+            {
+                HttpClient client = new HttpClient();
+                string result = "";
+                var response = await client.GetStreamAsync(url);
+                using (var res = new StreamReader(response, Encoding.GetEncoding("iso-8859-1")))
+                {
+                    result += res.ReadToEnd();
+                }
+                return result;
+            }
+            catch
+            {
+                return null;
+            }
         }
         public Start()
         {
@@ -118,20 +127,29 @@ namespace Browser_IP_CW01
                 url = "http://" + url;
             }
             WebPage page = new WebPage(url);
-            history.insert(page);
             Browser browser = new Browser();
             browser.tb.Text = url;
-            var awaiter = callUrl(url);
+            var awaiter = await callUrl(url);
             //awaiter's result is the HTML code of user's URL.
             //if there was a result -> show!
-            if (awaiter.Result != "")
+            if (awaiter != null)
             {
+                if (Browser.isFavorite(page.url))
+                    browser.dbtn.Visible = true;
+                else
+                    browser.dbtn.Visible = false;
+                history.insert(page);
+                browser.rtb.Text = awaiter;
                 browser.Show();
                 this.Hide();
             }
+            else
+            {
+                MessageBox.Show("404 - Not found!");
+            }
         }
 
-        private void UrlTxt_KeyDown(object sender, KeyEventArgs e)
+        private async void UrlTxt_KeyDown(object sender, KeyEventArgs e)
         {
             if(e.KeyCode == Keys.Enter)
             {
@@ -149,13 +167,81 @@ namespace Browser_IP_CW01
                     url = "http://" + url;
                 }
                 WebPage page = new WebPage(url);
-                history.insert(page);
                 Browser browser = new Browser();
-                browser.wb.Navigate(url);
                 browser.tb.Text = url;
-                browser.Show();
-                this.Hide();
+                var awaiter = await callUrl(url);
+                if(awaiter != null)
+                {
+                    if (Browser.isFavorite(page.url))
+                        browser.dbtn.Visible = true;
+                    else
+                        browser.dbtn.Visible = false;
+                    history.insert(page);
+                    browser.rtb.Text = awaiter; 
+                    browser.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    MessageBox.Show("404 - Not found!");
+                }
             }
         }
+
+        public static void writeHistory(string url)
+        {
+            string data = url + "\n";
+            File.AppendAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\history.txt", data);
+        }
+        public static void loadHistory(HistoryContainer history) 
+        {
+            string text = File.ReadAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\history.txt");
+            string[] data = text.Split('\n');
+            history.lastIndex = data.Length-1;
+            for(int i  = 0; i < data.Length-1 && i<49; i++)
+            {
+                history.pages[i] = new WebPage(data[i]);
+            }
+        }
+        //find index of a page in history. return -1 if it was not there.
+        public static int findHistoryIndex(string url)
+        {
+            int result = -1;
+            string text = File.ReadAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\history.txt");
+            string[] data = text.Split('\n');
+            for (int i = 0; i < data.Length && data[i] != ""; i++)
+            {
+                if (data[i].Equals(url))
+                    result = i;
+            }
+            return result;
+        }
+
+        private void HistoryBtn_Click(object sender, EventArgs e)
+        {
+            History h = new History();
+            string text = File.ReadAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\history.txt");
+            string[] data = text.Split('\n');
+            for(int i = 0; i < data.Length - 1; i++)
+            {
+                h.rtb.Text += (data[i]+"\n");
+            }
+            h.Show();
+            this.Hide();
+        }
+
+        private void FavoritsBtn_Click(object sender, EventArgs e)
+        {
+            string text = File.ReadAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\favorits.txt");
+            string[] data = text.Split('\n');
+            Favorits f = new Favorits();
+            for(int i=0; i < data.Length -1; i++)
+            {
+                f.rtb.Text += (data[i]+"\n");
+            }
+            f.Show();
+            this.Hide();    
+        }
+
     }
 }

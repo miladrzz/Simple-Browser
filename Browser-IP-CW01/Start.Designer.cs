@@ -70,6 +70,7 @@
             this.HistoryBtn.TabIndex = 3;
             this.HistoryBtn.Text = "History";
             this.HistoryBtn.UseVisualStyleBackColor = true;
+            this.HistoryBtn.Click += new System.EventHandler(this.HistoryBtn_Click);
             // 
             // FavoritsBtn
             // 
@@ -79,6 +80,7 @@
             this.FavoritsBtn.TabIndex = 4;
             this.FavoritsBtn.Text = "Favorits";
             this.FavoritsBtn.UseVisualStyleBackColor = true;
+            this.FavoritsBtn.Click += new System.EventHandler(this.FavoritsBtn_Click);
             // 
             // Start
             // 

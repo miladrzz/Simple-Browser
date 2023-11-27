@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Net.Http;
+using System.Net;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Browser_IP_CW01
 {
@@ -39,6 +41,7 @@ namespace Browser_IP_CW01
             {
                 int index = findHistoryIndex(page.url);
                 loadHistory(this);
+
                 //if page was not in history.
                 if (index == -1)
                 {
@@ -92,12 +95,25 @@ namespace Browser_IP_CW01
         {
             try
             {
-                HttpClient client = new HttpClient();
                 string result = "";
-                var response = await client.GetStreamAsync(url);
-                using (var res = new StreamReader(response, Encoding.GetEncoding("iso-8859-1")))
+                HttpClient client = new HttpClient();
+                var response = await client.GetAsync(url);
+                var status = response.StatusCode;
+                if (status == HttpStatusCode.BadRequest) 
                 {
-                    result += res.ReadToEnd();
+                    MessageBox.Show("400 - Bad request!");
+                }
+                if (status == HttpStatusCode.Forbidden)
+                {
+                    MessageBox.Show("403 - Forbidden!");
+                }
+                if (status == HttpStatusCode.NotFound)
+                {
+                    MessageBox.Show("404 - Not found!");
+                }
+                using (var sr = new StreamReader(await response.Content.ReadAsStreamAsync(), Encoding.GetEncoding("iso-8859-1")))
+                {
+                    result = sr.ReadToEnd();
                 }
                 return result;
             }
@@ -113,6 +129,9 @@ namespace Browser_IP_CW01
         //it has to await for response -> it must be async.
         private async void GoBtn_Click(object sender, EventArgs e)
         {
+            string homepath = AppDomain.CurrentDomain.BaseDirectory;
+            homepath += "home.txt";
+            File.CreateText(homepath);
             string eMessage = "";
             if (String.IsNullOrEmpty(UrlTxt.Text))
             {
@@ -124,7 +143,7 @@ namespace Browser_IP_CW01
             string url = UrlTxt.Text;
             if (!url.StartsWith("http://") && !url.StartsWith("https://"))
             {
-                url = "http://" + url;
+                url = "http://www." + url;
             }
             WebPage page = new WebPage(url);
             Browser browser = new Browser();
@@ -140,18 +159,23 @@ namespace Browser_IP_CW01
                     browser.dbtn.Visible = false;
                 history.insert(page);
                 browser.rtb.Text = awaiter;
+                string homePageUrl = File.ReadAllText(homepath);
+                if (homePageUrl.Equals(browser.tb.Text))
+                    browser.shb.Text = "dehome";
+                else
+                    browser.shb.Text = "Set home";
                 browser.Show();
                 this.Hide();
             }
             else
             {
-                MessageBox.Show("404 - Not found!");
+                MessageBox.Show("Not found!");
             }
         }
 
         private async void UrlTxt_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter)
             {
                 string eMessage = "";
                 if (String.IsNullOrEmpty(UrlTxt.Text))
@@ -164,7 +188,7 @@ namespace Browser_IP_CW01
                 string url = UrlTxt.Text;
                 if (!url.StartsWith("http://") && !url.StartsWith("https://"))
                 {
-                    url = "http://" + url;
+                    url = "http://www." + url;
                 }
                 WebPage page = new WebPage(url);
                 Browser browser = new Browser();
@@ -177,13 +201,18 @@ namespace Browser_IP_CW01
                     else
                         browser.dbtn.Visible = false;
                     history.insert(page);
+                    string homePageUrl = File.ReadAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\home.txt");
+                    if (homePageUrl.Equals(browser.tb.Text))
+                        browser.shb.Text = "dehome";
+                    else
+                        browser.shb.Text = "Set home";
                     browser.rtb.Text = awaiter; 
                     browser.Show();
                     this.Hide();
                 }
                 else
                 {
-                    MessageBox.Show("404 - Not found!");
+                    MessageBox.Show("Not found!");
                 }
             }
         }
@@ -222,7 +251,7 @@ namespace Browser_IP_CW01
             History h = new History();
             string text = File.ReadAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\history.txt");
             string[] data = text.Split('\n');
-            for(int i = 0; i < data.Length - 1; i++)
+            for(int i = data.Length-2; i >= 0; i--)
             {
                 h.rtb.Text += (data[i]+"\n");
             }
@@ -235,7 +264,7 @@ namespace Browser_IP_CW01
             string text = File.ReadAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\favorits.txt");
             string[] data = text.Split('\n');
             Favorits f = new Favorits();
-            for(int i=0; i < data.Length -1; i++)
+            for(int i=0; i < data.Length; i++)
             {
                 f.rtb.Text += (data[i]+"\n");
             }
@@ -243,5 +272,105 @@ namespace Browser_IP_CW01
             this.Hide();    
         }
 
+        private void SHPBtn_Click(object sender, EventArgs e)
+        {
+            SetHome sh = new SetHome();
+            sh.Show();
+            this.Hide();
+        }
+
+        private async void HomeBtn_Click(object sender, EventArgs e)
+        {
+            string homeUrl = File.ReadAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\home.txt");
+            if (homeUrl.Equals(""))
+            {
+                MessageBox.Show("There is no home page.\n Set one first!");
+            }
+            else
+            {
+                WebPage page = new WebPage(homeUrl);
+                var awaiter = await callUrl(homeUrl);
+                if (awaiter != null)
+                {
+                    Browser browser = new Browser();
+                    browser.tb.Text = page.url;
+                    if (Browser.isFavorite(page.url))
+                        browser.dbtn.Visible = true;
+                    else
+                        browser.dbtn.Visible = false;
+                    browser.shb.Text = "Dehome";
+                    history.insert(page);
+                    browser.rtb.Text = awaiter;
+                    browser.Show();
+                    this.Hide();
+
+                }
+            }
+        }
+
+        private async void browserBtn_Click(object sender, EventArgs e)
+        {
+            string homeUrl = File.ReadAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\home.txt");
+            if (homeUrl.Equals(""))
+            {
+                WebPage hwuni = new WebPage("https://www.hw.ac.uk/");
+                Browser browser = new Browser();
+                browser.tb.Text = hwuni.url;
+                var awaiter = await callUrl(hwuni.url);
+                //awaiter's result is the HTML code of user's URL.
+                //if there was a result -> show!
+                if (awaiter != null)
+                {
+                    if (Browser.isFavorite(hwuni.url))
+                        browser.dbtn.Visible = true;
+                    else
+                        browser.dbtn.Visible = false;
+                    browser.shb.Text = "Set home";
+                    history.insert(hwuni);
+                    browser.rtb.Text = awaiter;
+                    browser.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    MessageBox.Show("Not found!");
+                }
+            }
+            else
+            {
+                WebPage page = new WebPage(homeUrl);
+                var awaiter = await callUrl(homeUrl);
+                if (awaiter != null)
+                {
+                    Browser browser = new Browser();
+                    browser.tb.Text = page.url;
+                    if (Browser.isFavorite(page.url))
+                        browser.dbtn.Visible = true;
+                    else
+                        browser.dbtn.Visible = false;
+                    if (isHome(browser.shb.Text))
+                        browser.shb.Text = "Dehome";
+                    history.insert(page);
+                    browser.rtb.Text = awaiter;
+                    browser.Show();
+                    this.Hide();
+                }
+            }
+        }
+        public static bool isHome(string url)
+        {
+            string homeUrl = File.ReadAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\home.txt");
+            if (url.Equals(homeUrl))
+                return true;
+            else
+                return false;
+        }
+
+        private void BDLBtn_Click(object sender, EventArgs e)
+        {
+            Bulk bulk = new Bulk();
+            bulk.Show();
+            this.Hide();
+        }
     }
 }

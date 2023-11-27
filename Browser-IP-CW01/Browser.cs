@@ -5,11 +5,13 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace Browser_IP_CW01
 {
@@ -18,25 +20,48 @@ namespace Browser_IP_CW01
         public TextBox tb;
         public RichTextBox rtb;
         public Button dbtn;
+        public Button shb;
+
+        // for input dialog box.
+        public Label textLabel = new Label() { Left = 50, Top = 20, Text = "Name:" };
+        public TextBox textBox = new TextBox() { Left = 50, Top = 50, Width = 400 };
+        public Button confirmation = new Button() { Text = "Ok", Left = 350, Width = 100, Top = 70, DialogResult = DialogResult.OK };
+        public bool nameEntered = false;
+        public string name = "";
+
         public async Task<string> callUrl(string url)
         {
             try
             {
-                HttpClient client = new HttpClient();
                 string result = "";
-                var response = await client.GetStreamAsync(url);
-                using (var res = new StreamReader(response, Encoding.GetEncoding("iso-8859-1")))
+                HttpClient client = new HttpClient();
+                var response = await client.GetAsync(url);
+                var status = response.StatusCode;
+                if (status == HttpStatusCode.BadRequest)
                 {
-                    result += res.ReadToEnd();
+                    MessageBox.Show("400 - Bad request!");
                 }
-                if (isFavorite(url))
+                if (status == HttpStatusCode.Forbidden)
                 {
-                    DBtn.Visible = true;
+                    MessageBox.Show("403 - Forbidden!");
                 }
+                if (status == HttpStatusCode.NotFound)
+                {
+                    MessageBox.Show("404 - Not found!");
+                }
+                using (var sr = new StreamReader(await response.Content.ReadAsStreamAsync(), Encoding.GetEncoding("iso-8859-1")))
+                {
+                    result = sr.ReadToEnd();
+                }
+                string homePageUrl =  File.ReadAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\home.txt");
+                if (homePageUrl.Equals(textBox1.Text))
+                    SetHPage.Text = "Dehome";
                 else
-                {
-                    DBtn.Visible = false;
-                }
+                    SetHPage.Text = "Set home";
+                string favorites = File.ReadAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\favorits.txt");
+                string[] fpages = favorites.Split('\n');
+                if(fpages.Contains(textBox1.Text))
+                    DBtn.Visible = true;
                 return result;
             }
             catch
@@ -50,6 +75,7 @@ namespace Browser_IP_CW01
             tb = textBox1;
             rtb = richTextBox1;
             dbtn = DBtn;
+            shb = SetHPage;
         }
         Start start = new Start();
         private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
@@ -64,7 +90,7 @@ namespace Browser_IP_CW01
 
         private void Browser_Load(object sender, EventArgs e)
         {
-
+            confirmation.Click += new System.EventHandler(confirmation_Click);
         }
 
         private async void BackBtn_Click(object sender, EventArgs e)
@@ -78,8 +104,14 @@ namespace Browser_IP_CW01
                 Start.WebPage backpage = new Start.WebPage("");
                 backpage.url = start.history.pages[index-1].url;
                 var awaiter = await callUrl(backpage.url);
-                richTextBox1.Text = awaiter;
-                textBox1.Text = backpage.url;
+                if (awaiter != "")
+                {
+                    richTextBox1.Text = awaiter;
+                    textBox1.Text = backpage.url;
+                    if (Start.isHome(backpage.url))
+                        SetHPage.Text = "Dehome";
+                    else SetHPage.Text = "Set home";
+                }
             }
         }
 
@@ -94,8 +126,14 @@ namespace Browser_IP_CW01
                 Start.WebPage forwardpage = new Start.WebPage("");
                 forwardpage.url = start.history.pages[index + 1].url;
                 var awaiter = await callUrl(forwardpage.url);
-                richTextBox1.Text = awaiter;
-                textBox1.Text = forwardpage.url;
+                if(awaiter != null)
+                {
+                    richTextBox1.Text = awaiter;
+                    textBox1.Text = forwardpage.url;
+                    if (Start.isHome(forwardpage.url))
+                        SetHPage.Text = "Dehome";
+                    else SetHPage.Text = "Set home";
+                }
             }
         }
 
@@ -103,7 +141,11 @@ namespace Browser_IP_CW01
         {
             Start.WebPage currpage = new Start.WebPage(textBox1.Text);
             var awaiter = await callUrl(currpage.url);
-            richTextBox1.Text = awaiter;
+            if (awaiter != null)
+            {
+                richTextBox1.Text = awaiter;
+                textBox1.Text = currpage.url;
+            }
         }
 
         private void HomeBtn_Click(object sender, EventArgs e)
@@ -115,7 +157,7 @@ namespace Browser_IP_CW01
 
         private async void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter)
             {
                 string eMessage = "";
                 if (String.IsNullOrEmpty(textBox1.Text))
@@ -128,7 +170,7 @@ namespace Browser_IP_CW01
                 string url = textBox1.Text;
                 if (!url.StartsWith("http://") && !url.StartsWith("https://"))
                 {
-                    url = "http://" + url;
+                    url = "http://www." + url;
                 }
                 Start.WebPage page = new Start.WebPage(url);
                 var awaiter = await callUrl(page.url);
@@ -140,22 +182,20 @@ namespace Browser_IP_CW01
                 }
                 else
                 {
-                    MessageBox.Show("404 - Not found!");
+                    MessageBox.Show("Not found!");
                 }
             }
         }
-
+        private void confirmation_Click(object sender  , EventArgs e)
+        {
+            name = textBox.Text;
+            nameEntered = true;
+        }
         private void FavoriteBtn_Click(object sender, EventArgs e)
         {
             string text = File.ReadAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\favorits.txt");
             string[] favorites = text.Split('\n');
-            bool isThere = false;
-            for(int i = 0; i < favorites.Length-1; i++)
-            {
-                if (favorites[i].Equals(textBox1.Text)==true)
-                    isThere = true;
-            }
-            if (isThere) 
+            if (isFavorite(textBox1.Text)) 
             {
                 MessageBox.Show("This page is already in your favorits!");
             }
@@ -164,14 +204,18 @@ namespace Browser_IP_CW01
                 string data = textBox1.Text + "\n";
                 File.AppendAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\favorits.txt", data);
                 MessageBox.Show("Page set as favorite!");
+                textBox.Text = string.Empty;
                 DBtn.Visible = true;
             }
         }
         private void DBtn_Click(object sender, EventArgs e)
         {
-            removeFavorite(textBox1.Text);
-            MessageBox.Show("This URL has been removed from your favorites!");
-            DBtn.Visible = false;
+            if(isFavorite(textBox1.Text))
+            {
+                removeFavorite(textBox1.Text);
+                MessageBox.Show("This URL has been removed from your favorites!");
+                DBtn.Visible = false;
+            }
         }
         public static bool isFavorite(string url)
         {
@@ -200,7 +244,7 @@ namespace Browser_IP_CW01
                         break;
                     }
                 }
-                for (int i = index; i < data.Length - 1; i++)
+                for (int i = index; i < data.Length - 1 && index!=-1; i++)
                 {
                     data[i] = data[i + 1];
                 }
@@ -219,6 +263,45 @@ namespace Browser_IP_CW01
                 }
                 if (data[0] == "")
                     File.AppendAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\favorits.txt", "");
+            }
+        }
+
+        private void SetHPage_Click(object sender, EventArgs e)
+        {
+            string text = File.ReadAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\home.txt");
+            if (text.Equals(""))
+            {
+                File.WriteAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\home.txt", textBox1.Text);
+                MessageBox.Show("New home page set!");
+                SetHPage.Text = "Dehome";
+            }
+            else
+            {
+                if (text.Equals(textBox1.Text))
+                {
+                    MessageBox.Show("This page is not the home anymore!");
+                    File.WriteAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\home.txt", "");
+                    SetHPage.Text = "Set home";
+                }
+                else
+                {
+                    File.WriteAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\home.txt", "");
+                    File.WriteAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\home.txt", textBox1.Text);
+                    MessageBox.Show("New home page set!");
+                    SetHPage.Text = "Dehome";
+                }
+            }
+        }
+
+        private async void GoHomeBtn_Click(object sender, EventArgs e)
+        {
+            string text = File.ReadAllText("C:\\Users\\milad\\source\\repos\\Browser-IP-CW01\\Browser-IP-CW01\\home.txt");
+            Start.WebPage homepage = new Start.WebPage(text);
+            var awaiter = await callUrl(homepage.url);
+            if (awaiter != null)
+            {
+                richTextBox1.Text = awaiter;
+                textBox1.Text = homepage.url;
             }
         }
     }

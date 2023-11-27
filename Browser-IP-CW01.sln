@@ -5,6 +5,10 @@ VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Browser-IP-CW01", "Browser-IP-CW01\Browser-IP-CW01.csproj", "{6C120102-D9D4-4CD9-987C-458A3E4B97A5}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Browser", "Browser\Browser.vdproj", "{85C5AA84-4BCE-4DDD-B91C-2C1E8728F74C}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Browser-IP", "Browser-IP\Browser-IP.vdproj", "{D997481C-F2AA-4084-9ED6-A963FD773F08}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,10 @@ Global
 		{6C120102-D9D4-4CD9-987C-458A3E4B97A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C120102-D9D4-4CD9-987C-458A3E4B97A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C120102-D9D4-4CD9-987C-458A3E4B97A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85C5AA84-4BCE-4DDD-B91C-2C1E8728F74C}.Debug|Any CPU.ActiveCfg = Debug
+		{85C5AA84-4BCE-4DDD-B91C-2C1E8728F74C}.Release|Any CPU.ActiveCfg = Release
+		{D997481C-F2AA-4084-9ED6-A963FD773F08}.Debug|Any CPU.ActiveCfg = Debug
+		{D997481C-F2AA-4084-9ED6-A963FD773F08}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

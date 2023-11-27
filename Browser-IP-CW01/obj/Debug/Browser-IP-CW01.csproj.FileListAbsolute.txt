@@ -2,7 +2,6 @@ C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\bin\Debug\Browser-IP
 C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\bin\Debug\Browser-IP-CW01.exe
 C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\bin\Debug\Browser-IP-CW01.pdb
 C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser-IP-CW01.csproj.AssemblyReference.cache
-C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser-IP-CW01.csproj.SuggestedBindingRedirects.cache
 C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser_IP_CW01.Browser.resources
 C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser_IP_CW01.Properties.Resources.resources
 C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser-IP-CW01.csproj.GenerateResource.cache
@@ -15,3 +14,9 @@ C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\bin\Debug\Microsoft.
 C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser-IP-CW01.csproj.CopyComplete
 C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser_IP_CW01.History.resources
 C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser_IP_CW01.Favorits.resources
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser_IP_CW01.SetHome.resources
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\bin\Debug\Browser-IP-CW01.exe.manifest
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\bin\Debug\Browser-IP-CW01.application
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser-IP-CW01.exe.manifest
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser-IP-CW01.application
+C:\Users\milad\source\repos\Browser-IP-CW01\Browser-IP-CW01\obj\Debug\Browser_IP_CW01.Bulk.resources

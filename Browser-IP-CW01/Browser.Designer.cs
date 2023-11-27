@@ -28,7 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Browser));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.GoHomeBtn = new System.Windows.Forms.Button();
+            this.SetHPage = new System.Windows.Forms.Button();
+            this.DBtn = new System.Windows.Forms.Button();
             this.FavoriteBtn = new System.Windows.Forms.Button();
             this.HomeBtn = new System.Windows.Forms.Button();
             this.RefreshBtn = new System.Windows.Forms.Button();
@@ -36,7 +40,6 @@
             this.ForwardBtn = new System.Windows.Forms.Button();
             this.BackBtn = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.DBtn = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,6 +48,8 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.GoHomeBtn);
+            this.panel1.Controls.Add(this.SetHPage);
             this.panel1.Controls.Add(this.DBtn);
             this.panel1.Controls.Add(this.FavoriteBtn);
             this.panel1.Controls.Add(this.HomeBtn);
@@ -57,11 +62,45 @@
             this.panel1.Size = new System.Drawing.Size(800, 34);
             this.panel1.TabIndex = 0;
             // 
+            // GoHomeBtn
+            // 
+            this.GoHomeBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.GoHomeBtn.Location = new System.Drawing.Point(631, 5);
+            this.GoHomeBtn.Name = "GoHomeBtn";
+            this.GoHomeBtn.Size = new System.Drawing.Size(54, 23);
+            this.GoHomeBtn.TabIndex = 9;
+            this.GoHomeBtn.Text = "Home";
+            this.GoHomeBtn.UseVisualStyleBackColor = true;
+            this.GoHomeBtn.Click += new System.EventHandler(this.GoHomeBtn_Click);
+            // 
+            // SetHPage
+            // 
+            this.SetHPage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.SetHPage.Location = new System.Drawing.Point(562, 5);
+            this.SetHPage.Name = "SetHPage";
+            this.SetHPage.Size = new System.Drawing.Size(63, 23);
+            this.SetHPage.TabIndex = 8;
+            this.SetHPage.Text = "Set Home";
+            this.SetHPage.UseVisualStyleBackColor = true;
+            this.SetHPage.Click += new System.EventHandler(this.SetHPage_Click);
+            // 
+            // DBtn
+            // 
+            this.DBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.DBtn.Location = new System.Drawing.Point(492, 5);
+            this.DBtn.Name = "DBtn";
+            this.DBtn.Size = new System.Drawing.Size(64, 23);
+            this.DBtn.TabIndex = 7;
+            this.DBtn.Text = "Defavorite";
+            this.DBtn.UseVisualStyleBackColor = true;
+            this.DBtn.Click += new System.EventHandler(this.DBtn_Click);
+            // 
             // FavoriteBtn
             // 
-            this.FavoriteBtn.Location = new System.Drawing.Point(524, 6);
+            this.FavoriteBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.FavoriteBtn.Location = new System.Drawing.Point(416, 5);
             this.FavoriteBtn.Name = "FavoriteBtn";
-            this.FavoriteBtn.Size = new System.Drawing.Size(69, 23);
+            this.FavoriteBtn.Size = new System.Drawing.Size(70, 23);
             this.FavoriteBtn.TabIndex = 2;
             this.FavoriteBtn.Text = "Set favorite";
             this.FavoriteBtn.UseVisualStyleBackColor = true;
@@ -74,7 +113,7 @@
             this.HomeBtn.Name = "HomeBtn";
             this.HomeBtn.Size = new System.Drawing.Size(47, 23);
             this.HomeBtn.TabIndex = 6;
-            this.HomeBtn.Text = "Home";
+            this.HomeBtn.Text = "Start";
             this.HomeBtn.UseVisualStyleBackColor = true;
             this.HomeBtn.Click += new System.EventHandler(this.HomeBtn_Click);
             // 
@@ -88,24 +127,28 @@
             this.RefreshBtn.Text = "Refresh";
             this.RefreshBtn.UseVisualStyleBackColor = true;
             this.RefreshBtn.Click += new System.EventHandler(this.RefreshBtn_Click);
+            //
+            //confirmation
+            //
+            
             // 
             // textBox1
             // 
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(122, 8);
+            this.textBox1.Location = new System.Drawing.Point(122, 7);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(396, 20);
+            this.textBox1.Size = new System.Drawing.Size(288, 20);
             this.textBox1.TabIndex = 2;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
             // ForwardBtn
             // 
-            this.ForwardBtn.Location = new System.Drawing.Point(61, 5);
+            this.ForwardBtn.Location = new System.Drawing.Point(52, 5);
             this.ForwardBtn.Name = "ForwardBtn";
-            this.ForwardBtn.Size = new System.Drawing.Size(55, 23);
+            this.ForwardBtn.Size = new System.Drawing.Size(64, 23);
             this.ForwardBtn.TabIndex = 4;
             this.ForwardBtn.Text = "Forward";
             this.ForwardBtn.UseVisualStyleBackColor = true;
@@ -115,7 +158,7 @@
             // 
             this.BackBtn.Location = new System.Drawing.Point(3, 5);
             this.BackBtn.Name = "BackBtn";
-            this.BackBtn.Size = new System.Drawing.Size(52, 23);
+            this.BackBtn.Size = new System.Drawing.Size(43, 23);
             this.BackBtn.TabIndex = 3;
             this.BackBtn.Text = "Back";
             this.BackBtn.UseVisualStyleBackColor = true;
@@ -123,21 +166,14 @@
             // 
             // richTextBox1
             // 
+            this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox1.Location = new System.Drawing.Point(0, 34);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(800, 416);
             this.richTextBox1.TabIndex = 1;
             this.richTextBox1.Text = "";
-            // 
-            // DBtn
-            // 
-            this.DBtn.Location = new System.Drawing.Point(599, 5);
-            this.DBtn.Name = "DBtn";
-            this.DBtn.Size = new System.Drawing.Size(75, 23);
-            this.DBtn.TabIndex = 7;
-            this.DBtn.Text = "Defavorite";
-            this.DBtn.UseVisualStyleBackColor = true;
-            this.DBtn.Click += new System.EventHandler(this.DBtn_Click);
             // 
             // Browser
             // 
@@ -146,6 +182,7 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.panel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Browser";
             this.Text = "Browser";
             this.Load += new System.EventHandler(this.Browser_Load);
@@ -166,5 +203,6 @@
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Button FavoriteBtn;
         private System.Windows.Forms.Button DBtn;
-    }
+        private System.Windows.Forms.Button SetHPage;
+        private System.Windows.Forms.Button GoHomeBtn;    }
 }
